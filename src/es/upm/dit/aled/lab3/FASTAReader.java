@@ -166,10 +166,8 @@ public class FASTAReader {
 			throw new FASTAException("Pattern goes beyond the end of the file.");
 		}
 		int numDif = 0;
-		boolean match = true;
 		for (int i = 0; i < pattern.length; i++) {
 			if (pattern[i] != content[position + i]) {
-				match = false;
 				numDif ++;
 			}
 		}
@@ -190,7 +188,7 @@ public class FASTAReader {
 		
 		for(int i=0; i< validBytes -1; i++) {
 			try {
-				if (compareImproved(pattern, i)) {
+				if (compare(pattern, i)) {
 					positions.add(i);
 				}
 			} catch (FASTAException e) {
