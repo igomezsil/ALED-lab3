@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -160,7 +161,7 @@ public class FASTAReader {
 	 * Returns the number of characters in the pattern that are different from the
 	 * ones present in the indicated position.
 	 */
-	private int compareNumErrors(byte[] pattern, int position) throws FASTAException {
+	private int compareNumErrors (byte[] pattern, int position) throws FASTAException {
 		if (position + pattern.length > validBytes) {
 			throw new FASTAException("Pattern goes beyond the end of the file.");
 		}
@@ -185,8 +186,18 @@ public class FASTAReader {
 	 *         pattern in the data.
 	 */
 	public List<Integer> search(byte[] pattern) {
-		// TODO
-		return null;
+		List<Integer> positions = new ArrayList <>();
+		
+		for(int i=0; i< validBytes -1; i++) {
+			try {
+				if (compare(pattern, i)) {
+					positions.add(i);
+				}
+			} catch (FASTAException e) {
+				break;
+			}
+		}
+		return positions;
 	}
 
 	/**
