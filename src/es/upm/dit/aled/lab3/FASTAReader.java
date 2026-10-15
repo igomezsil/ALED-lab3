@@ -20,7 +20,11 @@ import java.util.List;
  */
 public class FASTAReader {
 
-	protected byte[] content;
+	/*
+	 * @content Array de bytes que contiene la secuencia completa de nucleótidos de un archivo FASTA -> GENOMA
+	 * @validBytes Indica cuántos de los bytes de content son válidos. Solo serán válidos los elementos desde content[0] hasta content[validBytes -1]
+	 */
+	protected byte[] content; 
 	protected int validBytes;
 
 	/**
@@ -117,7 +121,7 @@ public class FASTAReader {
 	 * Returns true if the pattern is present at the given position; false
 	 * otherwise.
 	 */
-	private boolean compare(byte[] pattern, int position) throws FASTAException {
+	private boolean compare (byte[] pattern, int position) throws FASTAException {
 		if (position + pattern.length > validBytes) {
 			throw new FASTAException("Pattern goes beyond the end of the file.");
 		}
@@ -134,9 +138,18 @@ public class FASTAReader {
 	 * Improved version of the compare method that stops checking elements of the
 	 * pattern when one has been found to be different.
 	 */
-	private boolean compareImproved(byte[] pattern, int position) throws FASTAException {
-		// TODO
-		return false;
+	private boolean compareImproved (byte[] pattern, int position) throws FASTAException {
+		if (position + pattern.length > validBytes) {
+			throw new FASTAException("Pattern goes beyond the end of the file.");
+		}
+		boolean match = true;
+		for (int i = 0; i < pattern.length; i++) {
+			if (pattern[i] != content[position + i]) {
+				match = false;
+				break;
+			}
+		}
+		return match;
 	}
 
 	/*
