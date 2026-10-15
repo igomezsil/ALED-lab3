@@ -190,7 +190,7 @@ public class FASTAReader {
 		
 		for(int i=0; i< validBytes -1; i++) {
 			try {
-				if (compare(pattern, i)) {
+				if (compareImproved(pattern, i)) {
 					positions.add(i);
 				}
 			} catch (FASTAException e) {
