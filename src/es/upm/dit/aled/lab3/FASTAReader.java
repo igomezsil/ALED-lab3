@@ -211,9 +211,20 @@ public class FASTAReader {
 	 *         pattern (with up to 1 errors) in the data.
 	 */
 	public List<Integer> searchSNV(byte[] pattern) {
-		// TODO
-		return null;
+List<Integer> positions = new ArrayList <>();
+		
+		for(int i=0; i< validBytes -1; i++) {
+			try {
+				if (compareNumErrors(pattern, i) <=1) {
+					positions.add(i);
+				}
+			} catch (FASTAException e) {
+				break;
+			}
+		}
+		return positions;
 	}
+	
 
 	public static void main(String[] args) {
 		long t1 = System.nanoTime();
