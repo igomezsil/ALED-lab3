@@ -1,5 +1,6 @@
 package es.upm.dit.aled.lab3.binary;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,9 +78,63 @@ public class FASTAReaderSuffixes extends FASTAReader {
 	 *         pattern in the data.
 	 */
 	@Override
-	public List<Integer> search(byte[] pattern) {
-		// TODO
-		return null;
+		public List<Integer> search(byte[] pattern) {
+		    List<Integer> result = new ArrayList<>();
+
+		    int lo = 0;
+		    int hi = suffixes.length - 1;
+
+		    while (lo <= hi) {
+		        int m = lo + (hi - lo) / 2;
+		        int posSuffix = suffixes[m].suffixIndex;
+		        boolean found = true;
+
+		        int i = 0;
+		        while (i < pattern.length) {
+		            if (posSuffix + i >= validBytes || pattern[i] != content[posSuffix + i]) {
+		                found = false;
+		                break;
+		            }
+		            i++;
+		        }
+
+		        if (found) {
+		            // Subir hasta el primer sufijo que coincide
+		            int first = m;
+		            while (first - 1 >= 0 && matches(suffixes[first - 1].suffixIndex, pattern)) {
+		                first--;
+		            }
+		            // Bajar recogiendo todos los que coinciden
+		            int k = first;
+		            while (k < suffixes.length && matches(suffixes[k].suffixIndex, pattern)) {
+		                result.add(suffixes[k].suffixIndex);
+		                k++;
+		            }
+		            return result;
+		        }
+
+		        if (posSuffix + i >= validBytes) {
+		            lo = m + 1;
+		        } else if (pattern[i] < content[posSuffix + i]) {
+		            hi = m - 1;
+		        } else {
+		            lo = m + 1;
+		        }
+		    }
+
+		    return result;
+		}
+
+		private boolean matches(int posSuffix, byte[] pattern) {
+		    if (posSuffix + pattern.length > validBytes) {
+		        return false;                  // el patrón no cabe en lo que queda
+		    }
+		    for (int i = 0; i < pattern.length; i++) {
+		        if (pattern[i] != content[posSuffix + i]) {
+		            return false;
+		        }
+		    }
+		    return true;
 	}
 
 	public static void main(String[] args) {
