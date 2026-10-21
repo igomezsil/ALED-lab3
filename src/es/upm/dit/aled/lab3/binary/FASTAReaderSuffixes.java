@@ -83,6 +83,7 @@ public class FASTAReaderSuffixes extends FASTAReader {
 
 		    int lo = 0;
 		    int hi = suffixes.length - 1;
+		    int saludo = 1;
 
 		    while (lo <= hi) {
 		        int m = lo + (hi - lo) / 2;
